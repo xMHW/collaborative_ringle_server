@@ -30,7 +30,7 @@ const port = process.env.PORT || 8082;
 app.listen(port, () => console.log(`Server up and running on port ${port}.`));
 
 //CARD SAVE
-app.post("/card", (req, res) => {
+app.post("/card/create", (req, res) => {
     const newCard = new Card({
         content: req.body.content,
         created: req.body.created,
@@ -48,9 +48,19 @@ app.post("/card", (req, res) => {
             res.json(err);
         });
 })
+
 //CARD UPDATE
-app.put("/card", (req,res) => {
+app.post("/card/update", (req,res) => {
     Card.updateOne({updater: req.body.updater}, {$set: {content: req.body.content, created: req.body.created}})
+        .then(function(dbProduct){
+            console.log(dbProduct);
+            res.json(dbProduct);
+        })
+})
+
+//Card Delete
+app.post("/card/delete", (req, res) => {
+    Product.findOneAndRemove({updater: req.body.updater})
         .then(function(dbProduct){
             console.log(dbProduct);
             res.json(dbProduct);
@@ -71,64 +81,6 @@ app.get("/card/find/all", (req, res) =>{
 
 
 
-app.post("/product", (req, res) => {
-    const newProduct = new Product({
-        name: req.body.name,
-        content: req.body.content
-    });
-// Create a new Product
-    Product.create(newProduct)
-        .then(function(dbProduct) {
-            // View the added result in the console
-            console.log(dbProduct);
-            res.json(dbProduct);
-        })
-        .catch(function(err) {
-            // If an error occurred, log it
-            console.log(err);
-            res.json(err);
-        });
-});
-//update 성공
-app.put("/product", (req, res) => {
-    Product.updateOne({name: req.body.name}, {$set: {price: req.body.price}})
-        .then(function(dbProduct){
-            console.log(dbProduct);
-            res.json(dbProduct);
-        })
-})
-//destroy
-app.post("/product/remove", (req, res) => {
-    Product.findOneAndRemove({name: req.body.name})
-        .then(function(dbProduct){
-            console.log(dbProduct);
-            res.json(dbProduct);
-        })
-})
 
-// 
-app.get("/product/:id", (req, res) => {
-    // Use Mongoose to get the Product by the id
-    Product.findOne({ _id: req.params.id })
-        .then(function(dbProduct) {
-            res.json(dbProduct);
-        })
-        .catch(function(err) {
-           console.log(err);
-           res.json(err);
-        });
-});
-
-app.get("/product/find/all", (req, res) => {
-    // Use Mongoose to get the Product by the id
-    Product.find({})
-        .then(function(dbProduct) {
-            res.json(dbProduct);
-        })
-        .catch(function(err) {
-           console.log(err);
-           res.json(err);
-        });
-});
 
 
