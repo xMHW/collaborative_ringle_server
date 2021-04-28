@@ -21,6 +21,10 @@ const CardSchema = new Schema({
     type: String,
     required: true
   },
+  cardposition: {
+    type: Number,
+    required: true
+  }
 });
 
 // Export the Schema

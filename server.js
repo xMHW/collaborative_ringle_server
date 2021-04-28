@@ -1,6 +1,5 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const Product = require("./models/Product");
 const cors = require("cors");
 const Card = require("./models/Card");
 
@@ -35,6 +34,7 @@ app.post("/card/create", (req, res) => {
         content: req.body.content,
         created: req.body.created,
         updater: req.body.updater,
+        cardposition: req.body.cardposition,
     })
     Card.create(newCard)
         .then(function(dbProduct) {
@@ -51,7 +51,7 @@ app.post("/card/create", (req, res) => {
 
 //CARD UPDATE
 app.post("/card/update", (req,res) => {
-    Card.updateOne({updater: req.body.updater}, {$set: {content: req.body.content, created: req.body.created}})
+    Card.updateOne({cardposition: req.body.cardposition}, {$set: {content: req.body.content, created: req.body.created}})
         .then(function(dbProduct){
             console.log(dbProduct);
             res.json(dbProduct);
@@ -60,7 +60,7 @@ app.post("/card/update", (req,res) => {
 
 //Card Delete
 app.post("/card/delete", (req, res) => {
-    Product.findOneAndRemove({updater: req.body.updater})
+    Card.findOneAndRemove({cardposition: req.body.cardposition})
         .then(function(dbProduct){
             console.log(dbProduct);
             res.json(dbProduct);
@@ -77,6 +77,14 @@ app.get("/card/find/all", (req, res) =>{
        console.log(err);
        res.json(err);
     });
+})
+
+app.post("/card/find", (req, res) => {
+    Card.find({cardposition: req.body.cardposition})
+    .then(function(dbProduct){
+        console.log(dbProduct);
+        res.json(dbProduct);
+    })
 })
 
 
