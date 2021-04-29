@@ -157,15 +157,10 @@ app.get("/card/find/all", (req, res) =>{
 
 //특정 card 데이터 가져오기
 app.post("/card/find", (req, res) => {
-    Card.find({cardposition: req.body.cardposition})
+    Card.find({id: req.body.uuid})
     .then((dbCard) => {
         console.log(dbCard);
         res.json(dbCard);
     })
 })
-
-
-
-
-
 
