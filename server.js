@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const Card = require("./models/Card");
+const Tree = require("./models/Tree");
 
 // Setup express app
 const app = express();
@@ -27,6 +28,31 @@ mongoose
 const port = process.env.PORT || 8082;
 
 app.listen(port, () => console.log(`Server up and running on port ${port}.`));
+//create Tree
+app.post ("/tree/create", (req, res) => {
+    const newTree = new Tree({
+        cards: req.body.cards,
+        page: 1,
+    })
+    Tree.create(newTree)
+    .then(function(dbTree) {
+        console.log(dbTree);
+        res.json(dbTree);
+    })
+    .catch(function(err) {
+        console.log(err);
+        res.json(err);
+    });
+})
+
+//update Tree
+app.post ("/tree/update", (req, res) => {
+    Tree.updateOne({page: req.body.page}, {$set: {cards: req.body.cards}})
+    .then(function(dbTree){
+        console.log(dbTree);
+        res.json(dbTree);
+    });
+})
 
 //CARD SAVE
 app.post("/card/create", (req, res) => {
