@@ -47,12 +47,17 @@ app.post ("/tree/create", (req, res) => {
 })
 
 //update Tree
-app.post ("/tree/update", (req, res) => {
-    Tree.updateOne({page: req.body.page}, {$set: {cards: req.body.cards}})
-    .then((dbTree) => {
-        console.log(dbTree);
-        res.json(dbTree);
-    });
+app.post ("/tree/update", async (req, res) => {
+    // Tree.updateOne({page: req.body.page}, {$set: {cards: req.body.cards}})
+    // .then((dbTree) => {
+    //     console.log(dbTree);
+    //     res.json(dbTree);
+    // });
+
+    const doc = await Tree.findOne({page: req.body.page});
+    doc.cards = req.body.cards;
+    const success = await doc.save();
+    res.json(success);
 })
 
 //get Tree
@@ -125,21 +130,22 @@ app.post("/card/create", (req, res) => {
 })
 
 //CARD UPDATE
-app.post("/card/update", (req,res) => {
-    Card.updateOne({cardposition: req.body.cardposition}, {$set: {content: req.body.content, created: req.body.created}})
-        .then((dbCard) => {
-            console.log(dbCard);
-            res.json(dbCard);
-        })
+app.post("/card/update", async(req,res) => {
+    const doc = await Card.findOne({_id: req.body._id});
+    doc.content = req.body.content;
+    doc.created = req.body.created;
+    doc.updater = req.body.created;
+    const success = await doc.save();
+    res.json(success);
 })
 
 //Card Delete
 app.post("/card/delete", (req, res) => {
-    Card.findOneAndRemove({cardposition: req.body.cardposition})
-        .then((dbCard) => {
-            console.log(dbCard);
-            res.json(dbCard);
-        })
+    Card.findOneAndRemove({_id: req.body._id})
+    .then((dbCard) => {
+        console.log(dbCard);
+        res.json(dbCard);
+    })
 })
 
 //모든 card 데이터 가져오기
@@ -149,17 +155,23 @@ app.get("/card/find/all", (req, res) =>{
         res.json(dbCard);
     })
     .catch((err) => {
-       console.log(err);
-       res.json(err);
+        console.log(err);
+        res.json(err);
     });
 })
 
 //특정 card 데이터 가져오기
 app.post("/card/find", (req, res) => {
-    Card.find({_id: req.body._id})
+    Card.findOne({_id: req.body._id})
     .then((dbCard) => {
         console.log(dbCard);
         res.json(dbCard);
     })
 })
 
+
+// Card.updateOne({_id: req.body._id}, {$set: {content: req.body.content, created: req.body.created, updater: req.body.updater}})
+//     .then((dbCard) => {
+//         console.log(dbCard);
+//         res.json(dbCard);
+//     })
