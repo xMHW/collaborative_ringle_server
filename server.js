@@ -26,7 +26,7 @@ mongoose
     .catch(err => console.log(err));
 
 // Specify the Port where the backend server can be accessed and start listening on that port
-const port = process.env.PORT || 8082;
+const port = process.env.PORT || 80;
 
 app.listen(port, () => console.log(`Server up and running on port ${port}.`));
 //create Tree
@@ -133,8 +133,7 @@ app.post("/card/create", (req, res) => {
 app.post("/card/update", async(req,res) => {
     const doc = await Card.findOne({_id: req.body._id});
     doc.content = req.body.content;
-    doc.created = req.body.created;
-    doc.updater = req.body.created;
+    doc.updater = req.body.updater;
     const success = await doc.save();
     res.json(success);
 })
