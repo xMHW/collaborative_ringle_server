@@ -43,6 +43,9 @@ io.on("connection", socket => {
         console.log(deltamap);
         socket.broadcast.emit("receive-changes", deltamap);
     });
+    socket.on("send-tree-changes", (deltamap) => {
+        socket.broadcast.emit("receive-tree-changes", deltamap);
+    })
 });
 
 //create Tree
