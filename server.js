@@ -38,13 +38,17 @@ const io = require('socket.io')(5000, {
 });
 
 io.on("connection", socket => {
+    let deltaTree = [];
 	console.log("connected");
     socket.on("send-changes", (deltamap) => {
         console.log(deltamap);
         socket.broadcast.emit("receive-changes", deltamap);
     });
     socket.on("send-tree-changes", (deltamap) => {
-        socket.broadcast.emit("receive-tree-changes", deltamap);
+        if(deltaTree != deltamap["delta"]){
+            socket.broadcast.emit("receive-tree-changes", deltamap);
+            deltaTree = deltamap["delta"];
+        };
     })
 });
 
