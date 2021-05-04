@@ -29,6 +29,21 @@ mongoose
 const port = process.env.PORT || 80;
 
 app.listen(port, () => console.log(`Server up and running on port ${port}.`));
+
+const io = require('socket.io')(5000, {
+    cors: {
+        origin: '*',
+        method: ['GET', 'POST']
+    }
+});
+
+io.on("connection", socket => {
+    socket.on("send-changes", delta => {
+        console.log(delta);
+        socket.broadcast.emit("receive-changes", delta);
+    });
+});
+
 //create Tree
 app.post ("/tree/create", (req, res) => {
     const newTree = new Tree({
