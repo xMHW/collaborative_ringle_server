@@ -38,9 +38,10 @@ const io = require('socket.io')(5000, {
 });
 
 io.on("connection", socket => {
-    socket.on("send-changes", delta => {
+	console.log("connected");
+    socket.on("send-changes", (delta, userId) => {
         console.log(delta);
-        socket.broadcast.emit("receive-changes", delta);
+        socket.broadcast.emit("receive-changes", (delta, userId));
     });
 });
 
